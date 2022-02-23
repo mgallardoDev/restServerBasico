@@ -59,7 +59,8 @@ const usuariosPost = async (req, response) => {
 
 const usuariosDelete = async (request, response) => {
   const { id } = request.params;
-  const usuario = await Usuario.findByIdAndUpdate(id, { state: false});
+  const usuario = await Usuario.findByIdAndUpdate(id, { state: false });
+  
   response.json({
     status: "ok",
     msg: "Usuario borrado correctamente",

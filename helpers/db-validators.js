@@ -20,8 +20,15 @@ const idExistsInDB = async (id, model) => {
   if (!checked) throw new Error(`El id ${id} no existe en la base de datos`);
 };
 
+const idState = async (id, model) => {
+  const checked = await model.findById(id);
+  if (checked.state == false) { 
+    throw new Error ("El elemento ya ha sido eliminado de la base de datos")
+  }
+}
 module.exports = {
   isRoleValid,
   isEmailAvailable,
   idExistsInDB,
+  idState
 };
