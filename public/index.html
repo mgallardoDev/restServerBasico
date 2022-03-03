@@ -4,9 +4,61 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Google Sign In</title>
   </head>
   <body>
-    <h1>Acceso denegado</h1>
+    <h1>Google Sing In</h1>
+    <span id="usuario"></span>
+    <hr />
+    <div
+      id="g_id_onload"
+      data-client_id="24469318698-prnggdm3dija84c2i73881u2oioecbve.apps.googleusercontent.com"
+      data-callback="handleCredentialResponse"
+    ></div>
+    <div
+      class="g_id_signin"
+      data-type="standard"
+      data-size="large"
+      data-theme="outline"
+      data-text="sign_in_with"
+      data-shape="rectangular"
+      data-logo_alignment="left"
+    ></div>
+
+    <button id="googleSignout">Sing Out</button>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <script>
+      function handleCredentialResponse(response) {
+        const body = { id_token: response.credential };
+        fetch("https://mgallardrestserver.herokuapp.com/api/auth/google", {
+          method: "post",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        })
+          .then((resp) => resp.json())
+          .then((resp) => {
+            localStorage.setItem("googleEmail", resp.usuario["email"]);
+            document.getElementById("usuario").innerText = resp.usuario.nombre;
+            console.log(google.accounts.id);
+
+            location.reload;
+          })
+          .catch(console.warn);
+      }
+
+      const button = document.getElementById("googleSignout");
+
+      button.onclick = () => {
+        google.accounts.id.disableAutoSelect();
+        google.accounts.id.revoke(
+          localStorage.getItem("googleEmail") || "",
+          (done) => {
+            localStorage.clear();
+            location.reload();
+          }
+        );
+      };
+    </script>
   </body>
 </html>
