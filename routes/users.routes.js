@@ -7,11 +7,11 @@ const {
   isRoleValid,
   isEmailAvailable,
   idExistsInDB,
-  idState,
+  idStatus,
 } = require("../helpers/db-validators");
 
 const controladorUsuarios = require("../controllers/users.controller");
-const Usuario = require("../models/usuario");
+const Usuario = require("../models/user");
 
 const router = Router();
 
@@ -49,7 +49,7 @@ router.delete(
     validaRol(["ADMIN_ROLE", "VENTAS_ROLE"]),
     check("id", "No es un identificador válido").isMongoId(),
     check("id").custom((id) => idExistsInDB(id, Usuario)),
-    check("id").custom((id) => idState(id, Usuario)),
+    check("id").custom((id) => idStatus(id, Usuario)),
     validarCampos,
   ],
   controladorUsuarios.usuariosDelete

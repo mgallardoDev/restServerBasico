@@ -1,14 +1,14 @@
 const { request, response } = require("express");
 const bcryptjs = require("bcryptjs");
 
-const Usuario = require("../models/usuario");
+const Usuario = require("../models/user");
 const { isEmailAvailable } = require("../helpers/db-validators");
 
 const usuariosGet = async (req = request, res = response) => {
   let { limit = 5, page = 0 } = req.query;
   isNaN(limit) ? (limit = 5) : null;
   isNaN(page) ? (page = 0) : null;
-  query = { state: true };
+  query = { status: true };
 
   const [usuarios, count] = await Promise.all([
     Usuario.find(query)
@@ -59,7 +59,7 @@ const usuariosPost = async (req, response) => {
 
 const usuariosDelete = async (request, response) => {
   const { id } = request.params;
-  const usuario = await Usuario.findByIdAndUpdate(id, { state: false });
+  const usuario = await Usuario.findByIdAndUpdate(id, { status: false });
   
   response.json({
     status: "ok",

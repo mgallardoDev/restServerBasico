@@ -7,9 +7,6 @@ const generarJWT = (uid = "") => {
     jwt.sign(
       payload,
       process.env.SECRETORPRIVATEKEY,
-      {
-        expiresIn: "4h",
-      },
       (err, token) => {
         if (err) {
           console.log(err);

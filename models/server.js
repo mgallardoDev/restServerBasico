@@ -1,16 +1,28 @@
 const express = require("express");
 const cors = require("cors");
 const { dbConection } = require("../database/configDB");
+const {
+  AuthRoutes,
+  CategoriesRoutes,
+  ProductsRoutes,
+  SearchRoutes,
+  UsersRoutes,
+} = require("../routes");
 
 class Server {
   constructor() {
     this.app = express();
     this.port = process.env.PORT;
-    this.usuarioPath = "/api/usuarios";
-    this.authPath = "/api/auth"
+    this.paths = {
+      auth: "/api/auth",
+      categories: "/api/categories",
+      products: "/api/products",
+      search: "/api/search",
+      users: "/api/usuarios",
+    };
 
     //Conect DB
-    this.conectarDB()
+    this.conectarDB();
 
     //Middlewares
     this.middlewares();
@@ -29,9 +41,11 @@ class Server {
   }
 
   routes() {
-    this.app.use(this.authPath, require("../routes/auth.routes"));
-    this.app.use(this.usuarioPath, require("../routes/user.routes"));
-
+    this.app.use(this.paths.auth, AuthRoutes )
+    this.app.use(this.paths.categories, CategoriesRoutes )
+    this.app.use(this.paths.products, ProductsRoutes )
+    this.app.use(this.paths.search, SearchRoutes )
+    this.app.use(this.paths.users, UsersRoutes )
   }
 
   listen() {
@@ -41,7 +55,7 @@ class Server {
   }
 
   async conectarDB() {
-    await dbConection()
+    await dbConection();
   }
 }
 

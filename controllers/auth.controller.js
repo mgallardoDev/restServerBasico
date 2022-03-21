@@ -4,12 +4,12 @@ const { response, json } = require("express");
 const { googleVerify } = require("../helpers/google-verify");
 const { generarJWT } = require("../helpers/generar-jwt");
 
-const Usuario = require("../models/usuario");
+const Usuario = require("../models/user");
 const login = async (req, res = response) => {
   const { email, password } = req.body;
 
   try {
-    const usuario = await Usuario.findOne({ email, state: true });
+    const usuario = await Usuario.findOne({ email, status: true });
     if (!usuario) {
       return res.status(400).json({
         msg: "Usuario incorrecto",
@@ -56,7 +56,7 @@ const googleSignIn = async (req, res = response) => {
       usuario = new Usuario(data);
       await usuario.save();
     }
-    if (!usuario.state) {
+    if (!usuario.status) {
       return res.status(401).json({ msg: "Hable con el administrador, usuario bloqueado" });
     }
     const token = await generarJWT(usuario.id);

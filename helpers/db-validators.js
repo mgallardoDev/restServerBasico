@@ -1,5 +1,6 @@
-const Role = require("../models/role");
-const usuario = require("../models/usuario");
+const Role = require("../models");
+const User = require("../models");
+const {Category }= require("../models");
 
 const isRoleValid = async (role = "") => {
   if (role !== "") {
@@ -10,7 +11,7 @@ const isRoleValid = async (role = "") => {
 };
 
 const isEmailAvailable = async (email) => {
-  const userByEmail = await usuario.findOne({ email });
+  const userByEmail = await User.findOne({ email });
   if (userByEmail)
     throw new Error(`El usuario ya está registrado en la base de datos`);
 };
@@ -20,15 +21,23 @@ const idExistsInDB = async (id, model) => {
   if (!checked) throw new Error(`El id ${id} no existe en la base de datos`);
 };
 
-const idState = async (id, model) => {
+const fieldValueExistsInDB = async (field, value, model) => {
+  const checked = await model.findOne({ [field]: value});
+  if (checked) throw new Error(`El ${field} ${value} ya existe en la base de datos`);
+};
+
+const idStatus = async (id, model) => {
   const checked = await model.findById(id);
-  if (checked.state == false) { 
+  if (checked.status == false) { 
     throw new Error ("El elemento ya ha sido eliminado de la base de datos")
   }
 }
+
+
 module.exports = {
   isRoleValid,
   isEmailAvailable,
   idExistsInDB,
-  idState
+  idStatus,
+  fieldValueExistsInDB
 };

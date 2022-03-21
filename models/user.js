@@ -27,7 +27,7 @@ const UserSchema = Schema({
     enum: ["ADMIN_ROLE", "USER_ROLE"],
   },
 
-  state: {
+  status: {
     type: Boolean,
     default: true,
   },
@@ -48,4 +48,4 @@ UserSchema.methods.toJSON = function () {
   return { uid: _id, ...user};
 }
 
-module.exports= model('Usuario', UserSchema)
+module.exports = model('User', UserSchema)
